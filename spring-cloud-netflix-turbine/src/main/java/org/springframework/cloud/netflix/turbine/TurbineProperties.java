@@ -16,12 +16,12 @@
 
 package org.springframework.cloud.netflix.turbine;
 
-import java.util.Arrays;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+
 import java.util.List;
 import java.util.Objects;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Spencer Gibb
@@ -36,14 +36,21 @@ public class TurbineProperties {
 
 	private boolean combineHostPort = true;
 
+	@Autowired
+	private DiscoveryClient discoveryClient; //Eureka中的DiscoveryClient类
+
 	public List<String> getAppConfigList() {
-		if (!StringUtils.hasText(this.appConfig)) {
+		/*if (!StringUtils.hasText(this.appConfig)) {
 			return null;
 		}
 		String[] parts = StringUtils.commaDelimitedListToStringArray(this.appConfig);
 		if (parts != null && parts.length > 0) {
 			parts = StringUtils.trimArrayElements(parts);
 			return Arrays.asList(parts);
+		}*/
+		List<String> discoverclient = discoveryClient.getServices();
+		if(discoverclient.size() > 0){
+			return discoverclient;
 		}
 		return null;
 	}
